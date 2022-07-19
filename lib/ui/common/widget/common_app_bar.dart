@@ -55,7 +55,7 @@ class _CommonAppBarState extends State<CommonAppBar> {
       leadingWidth: widget.isBackButtonVisible ? _appTheme.getResponsiveWidth(100) : widget.leadingWidth,
       actions: widget.actions,
       elevation: widget.elevation,
-      backgroundColor: _appTheme.whiteColor,
+      backgroundColor: _appTheme.primaryColor,
     );
   }
 

@@ -34,9 +34,13 @@ class AppThemeState extends State<AppTheme> {
 
   double getResponsiveHeight(double value) => ScreenUtil().setHeight(value);
 
-  Color get whiteColor => Color(0xFFFFFFFF);
+  Color get whiteColor => const Color(0xFFFFFFFF);
 
-  Color get primaryColor => Color(0xFF0086B5);
+  Color get primaryColor => const Color(0xFF2196F3);
+
+  Color get blackColor => const Color(0xFF000000);
+
+  Color get redColor => Color(0xffD22F31);
 
   ///
   /// Mention height and width which are mentioned in your design file(i.e XD)
