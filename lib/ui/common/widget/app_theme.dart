@@ -9,7 +9,7 @@ import '../../../enum/font_type.dart';
 class AppTheme extends StatefulWidget {
   final Widget? child;
 
-  AppTheme({@required this.child});
+  const AppTheme({Key? key, @required this.child}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
@@ -40,7 +40,9 @@ class AppThemeState extends State<AppTheme> {
 
   Color get blackColor => const Color(0xFF000000);
 
-  Color get redColor => Color(0xffD22F31);
+  Color get greyColor => const Color(0xFF808080);
+
+  Color get redColor => const Color(0xffD22F31);
 
   ///
   /// Mention height and width which are mentioned in your design file(i.e XD)

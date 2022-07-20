@@ -1,16 +1,18 @@
 import 'dart:async';
-import 'dart:convert';
-import 'dart:io';
+
+import 'package:practical/di/db_helper.dart';
 
 import 'api_interface.dart';
+import 'db_helper.dart';
 import 'network_manager.dart';
 
 class AppComponentBase extends AppComponentBaseRepository {
   static AppComponentBase? _instance;
   final NetworkManager _networkManager = NetworkManager();
   final ApiInterface _apiInterface = ApiInterface();
+  final DBHelper _dbHelper = DBHelper();
   final StreamController<bool> _progressDialogStreamController =
-  StreamController.broadcast();
+      StreamController.broadcast();
 
   Stream<bool> get progressDialogStream =>
       _progressDialogStreamController.stream;
@@ -41,12 +43,21 @@ class AppComponentBase extends AppComponentBaseRepository {
   NetworkManager getNetworkManager() {
     return _networkManager;
   }
+
+  @override
+  DBHelper getDbHelper() {
+    return _dbHelper;
+  }
+
+  initialiseDatabase() async {
+    await _dbHelper.initialiseDatabase();
+  }
 }
 
 abstract class AppComponentBaseRepository {
   ApiInterface getApiInterface();
 
-  //SharedPreference getSharedPreference();
-
   NetworkManager getNetworkManager();
+
+  DBHelper getDbHelper();
 }

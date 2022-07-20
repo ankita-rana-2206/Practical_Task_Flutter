@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/cupertino.dart';
 import 'package:practical/model/product.dart';
 
 import '../../di/app_component_base.dart';
@@ -27,7 +28,7 @@ class ProductBloc extends BlocBase {
       if (error is AppException) {
         error.onException();
       } else {
-        print(error.toString());
+        debugPrint(error.toString());
       }
     });
   }

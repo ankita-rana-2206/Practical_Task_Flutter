@@ -4,14 +4,14 @@ import '../utils.dart';
 import 'app_theme.dart';
 
 class CustomToolTip extends StatefulWidget {
-  final String message;
-  final TextStyle messageTextStyle;
-  final IconData icon;
+  final String? message;
+  final TextStyle? messageTextStyle;
 
-  CustomToolTip(
-      {required this.message,
-      required this.messageTextStyle,
-      required this.icon});
+  const CustomToolTip({
+    Key? key,
+    required this.message,
+    required this.messageTextStyle,
+  }) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
@@ -24,7 +24,6 @@ class CustomToolTipState extends State<CustomToolTip>
   bool isOpened = false;
   late AppThemeState _appTheme;
   late AnimationController _controller;
-  late Animation<double> _animation;
 
   @override
   void initState() {
@@ -34,7 +33,6 @@ class CustomToolTipState extends State<CustomToolTip>
         vsync: this,
         lowerBound: 0.5,
         upperBound: 1);
-    _animation = CurvedAnimation(parent: _controller, curve: Curves.ease);
     _controller.addListener(() {
       if (_controller.isCompleted) {
         _controller.reverse();
@@ -70,17 +68,10 @@ class CustomToolTipState extends State<CustomToolTip>
                         Radius.circular(_appTheme.getResponsiveHeight(10)))),
                 child: Center(
                     child: Text(
-                  widget.message,
+                  widget.message ?? '',
                   style: widget.messageTextStyle,
                   maxLines: 1,
                 ))),
-            ScaleTransition(
-                scale: _animation,
-                child: Icon(
-                  widget.icon,
-                  color: Colors.white,
-                  size: _appTheme.getResponsiveHeight(100),
-                )),
           ],
         ),
       ),

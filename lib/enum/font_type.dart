@@ -1,13 +1,13 @@
 import 'dart:ui';
 
-enum FontFamilyType { Poppins }
-enum FontWeightType { Light, Regular, Medium, SemiBold, Bold }
+enum FontFamilyType { poppins }
+enum FontWeightType { light, regular, medium, semiBold, bold }
 
 class FontType {
   static getFontFamilyType(FontFamilyType? fontFamilyType) {
     switch (fontFamilyType) {
-      case FontFamilyType.Poppins:
-        return "Poppins";
+      case FontFamilyType.poppins:
+        return "poppins";
       case null:
         return "";
     }
@@ -15,18 +15,18 @@ class FontType {
 
   static getFontWeightType(FontWeightType? fontWeightType) {
     switch (fontWeightType) {
-      case FontWeightType.Light:
+      case FontWeightType.light:
         return FontWeight.w300;
-      case FontWeightType.Regular:
+      case FontWeightType.regular:
         return FontWeight.w400;
-      case FontWeightType.Medium:
+      case FontWeightType.medium:
         return FontWeight.w500;
-      case FontWeightType.SemiBold:
+      case FontWeightType.semiBold:
         return FontWeight.w600;
-      case FontWeightType.Bold:
+      case FontWeightType.bold:
         return FontWeight.w700;
       case null:
-        return FontWeightType.Regular;
+        return FontWeightType.regular;
     }
   }
 }

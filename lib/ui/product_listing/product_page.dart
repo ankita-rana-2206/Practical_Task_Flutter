@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:practical/di/app_component_base.dart';
 import 'package:practical/ui/common/widget/app_theme.dart';
 import 'package:practical/ui/product_listing/product_bloc.dart';
 
 import '../../enum/font_type.dart';
 import '../../model/product.dart';
+import '../common/asset_images.dart';
+import '../common/routes.dart';
 import '../common/stringConstant.dart';
 import '../common/widget/common_app_bar.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class ProductPage extends StatefulWidget {
   const ProductPage({Key? key}) : super(key: key);
@@ -35,12 +39,14 @@ class _ProductPageState extends State<ProductPage> {
                 .of(context)
                 .size
                 .width, AppBar().preferredSize.height),
-        child: const CommonAppBar(
+        child: CommonAppBar(
           title: StringConstants.shoppingMall,
           elevation: 0.2,
           isBackButtonVisible: false,
           centerTitle: true,
-          actions: [],
+          actions: [
+            _getTitleCartIcon(_appThemeState)
+          ],
         ),
       ),
       body: Container(
@@ -54,7 +60,7 @@ class _ProductPageState extends State<ProductPage> {
     return StreamBuilder<List<Product>>(
       stream: _productBloc.productStream,
         builder: (context, snapshot) {
-        print("builder_data = ${snapshot.data}");
+          debugPrint("builder_data = ${snapshot.data}");
       return snapshot.data != null ? Container(
         margin: EdgeInsets.only(left: _appTheme.getResponsiveWidth(48), right: _appTheme.getResponsiveWidth(48)),
         child: GridView.builder(
@@ -77,7 +83,7 @@ class _ProductPageState extends State<ProductPage> {
       width: _appTheme.getResponsiveWidth(480),
       decoration: BoxDecoration(
         border: Border.all(color: _appTheme.primaryColor, width: _appTheme.getResponsiveWidth(3)),
-        borderRadius: BorderRadius.all(Radius.circular(13)),
+        borderRadius: const BorderRadius.all(Radius.circular(13)),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -85,7 +91,14 @@ class _ProductPageState extends State<ProductPage> {
         children: [
           _getProductImage(_appTheme, product?.featuredImage),
           _getSizedBox(_appTheme, height: 15),
-          _getProductName(_appTheme, product?.title),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(child: _getProductName(_appTheme, product?.title),),
+              _getCartIcon(_appTheme, product),
+              _getSizedBox(_appTheme, width: _appTheme.getResponsiveWidth(50))
+            ],
+          ),
           _getSizedBox(_appTheme, height: 10),
         ],
       ),
@@ -96,7 +109,7 @@ class _ProductPageState extends State<ProductPage> {
     return Container(
       height: _appTheme.getResponsiveHeight(280),
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(13)),
+          borderRadius: const BorderRadius.all(Radius.circular(13)),
           image: DecorationImage(image: NetworkImage(imagePath??''), fit: BoxFit.cover)),
     );
   }
@@ -107,8 +120,8 @@ class _ProductPageState extends State<ProductPage> {
       child: Text(
         productName ?? '',
         style: _appTheme.customTextStyle(
-            fontFamilyType: FontFamilyType.Poppins,
-            fontWeightType: FontWeightType.Regular,
+            fontFamilyType: FontFamilyType.poppins,
+            fontWeightType: FontWeightType.regular,
             fontSize: 34,
             color: _appTheme.blackColor),
       ),
@@ -122,18 +135,32 @@ class _ProductPageState extends State<ProductPage> {
     );
   }
 
-  // Widget _getCartIcon(AppThemeState _appTheme) {
-  //   return InkWell(
-  //     child: SvgPicture.asset(
-  //       SVGPath.cartIcon,
-  //       width: _appTheme.getResponsiveWidth(50.04),
-  //       height: _appTheme.getResponsiveHeight(50.41),
-  //     ),
-  //     onTap: () {
-  //       //Get.toNamed(RouteName.cartPage);
-  //     },
-  //   );
-  // }
+  Widget _getCartIcon(AppThemeState _appTheme, Product? product) {
+    return InkWell(
+      child: SvgPicture.asset(
+        SVGPath.cartIcon,
+        color: _appTheme.blackColor,
+        width: _appTheme.getResponsiveWidth(30),
+        height: _appTheme.getResponsiveHeight(30),
+      ),
+      onTap: () {
+        AppComponentBase.getInstance()?.getDbHelper().insertCartDetails(product!);
+      },
+    );
+  }
 
-
+  Widget _getTitleCartIcon(AppThemeState _appTheme) {
+    return InkWell(
+      child: SvgPicture.asset(
+        SVGPath.cartIcon,
+        color: _appTheme.whiteColor,
+        width: _appTheme.getResponsiveWidth(40),
+        height: _appTheme.getResponsiveHeight(40),
+      ),
+      onTap: () {
+        Navigator.of(context, rootNavigator: true)
+            .pushNamed(RouteName.cartPage);
+      },
+    );
+  }
 }

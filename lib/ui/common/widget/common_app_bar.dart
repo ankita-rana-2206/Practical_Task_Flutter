@@ -11,7 +11,6 @@ class CommonAppBar extends StatefulWidget {
   /// Widgets to display after the title.
   final Widget? leading;
 
-
   /// List of Widgets to display after the title.
   /// It's the same with the action property in the default appbar widget
   final List<Widget>? actions;
@@ -28,17 +27,18 @@ class CommonAppBar extends StatefulWidget {
 
   final double? elevation;
 
-  const CommonAppBar({
-    this.title,
-    this.leading,
-    this.actions,
-    this.centerTitle = true,
-    this.isBackButtonVisible = true,
-    this.isTitleVisible = true,
-    this.isLogoVisible=false,
-    this.leadingWidth,
-    this.elevation
-  });
+  const CommonAppBar(
+      {Key? key,
+      this.title,
+      this.leading,
+      this.actions,
+      this.centerTitle = true,
+      this.isBackButtonVisible = true,
+      this.isTitleVisible = true,
+      this.isLogoVisible = false,
+      this.leadingWidth,
+      this.elevation})
+      : super(key: key);
 
   @override
   _CommonAppBarState createState() => _CommonAppBarState();
@@ -49,10 +49,14 @@ class _CommonAppBarState extends State<CommonAppBar> {
   Widget build(BuildContext context) {
     final _appTheme = AppTheme.of(context);
     return AppBar(
-      title: widget.isTitleVisible ? _getTitle(_appTheme) : widget.isLogoVisible?_getAppIcon(_appTheme):Offstage(),
+      title: _getTitle(_appTheme),
       centerTitle: widget.centerTitle,
-      leading: widget.isBackButtonVisible ? _getBackImageOnAppbar(_appTheme) : widget.leading,
-      leadingWidth: widget.isBackButtonVisible ? _appTheme.getResponsiveWidth(100) : widget.leadingWidth,
+      leading: widget.isBackButtonVisible
+          ? _getBackImageOnAppbar(_appTheme)
+          : widget.leading,
+      leadingWidth: widget.isBackButtonVisible
+          ? _appTheme.getResponsiveWidth(100)
+          : widget.leadingWidth,
       actions: widget.actions,
       elevation: widget.elevation,
       backgroundColor: _appTheme.primaryColor,
@@ -65,9 +69,8 @@ class _CommonAppBarState extends State<CommonAppBar> {
       style: _appTheme.customTextStyle(
           fontSize: 50,
           color: _appTheme.whiteColor,
-          fontWeightType: FontWeightType.SemiBold,
-          fontFamilyType: FontFamilyType.Poppins
-      ),
+          fontWeightType: FontWeightType.semiBold,
+          fontFamilyType: FontFamilyType.poppins),
     );
   }
 
@@ -84,14 +87,6 @@ class _CommonAppBarState extends State<CommonAppBar> {
       onTap: () {
         Navigator.of(context).pop();
       },
-    );
-  }
-
-  Widget _getAppIcon(AppThemeState _appTheme) {
-    return Image.asset(
-      PNGPath.yabaLogo,
-      height: _appTheme.getResponsiveHeight(90),
-      width: _appTheme.getResponsiveWidth(228),
     );
   }
 }

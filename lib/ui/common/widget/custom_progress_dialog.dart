@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'app_theme.dart';
 
 class CustomProgressDialog extends StatelessWidget {
+  const CustomProgressDialog({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     final _appTheme = AppTheme.of(context);
@@ -14,7 +16,7 @@ class CustomProgressDialog extends StatelessWidget {
           borderRadius: BorderRadius.all(
               Radius.circular(_appTheme.getResponsiveHeight(10)))),
       child: Center(
-        child: Container(
+        child: SizedBox(
           height: _appTheme.getResponsiveHeight(100),
           width: _appTheme.getResponsiveHeight(100),
           child: CircularProgressIndicator(

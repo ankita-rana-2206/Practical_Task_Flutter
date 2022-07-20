@@ -10,7 +10,7 @@ class BlocProvider<BlocBase> extends StatefulWidget {
   final Widget child;
   final BlocBase bloc;
 
-  BlocProvider({Key? key, required this.child, required this.bloc})
+  const BlocProvider({Key? key, required this.child, required this.bloc})
       : super(key: key);
 
   static _BlocProviderInherited? of<BlocBase>(BuildContext context) {
@@ -47,7 +47,7 @@ class _BlocProviderState extends State<BlocProvider> {
 class _BlocProviderInherited extends InheritedWidget {
   final BlocBase bloc;
 
-  _BlocProviderInherited({required this.bloc, required Widget child, Key? key})
+  const _BlocProviderInherited({required this.bloc, required Widget child, Key? key})
       : super(key: key, child: child);
 
   @override
