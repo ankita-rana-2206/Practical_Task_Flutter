@@ -6,6 +6,7 @@ import 'package:path/path.dart';
 import 'package:practical/model/product.dart';
 import 'package:sqflite/sqflite.dart';
 
+import '../model/cart.dart';
 import '../ui/common/dbConstant.dart';
 
 class DBHelper {
@@ -27,7 +28,8 @@ class DBHelper {
         db.execute(
           'CREATE TABLE IF NOT EXISTS ${DBConstants.cartDetailTable} '
           '(${DBConstants.id} INTEGER PRIMARY KEY AUTOINCREMENT, '
-          '${DBConstants.timeStamp} VARCHAR, '
+          '${DBConstants.productId} INTEGER, '
+          '${DBConstants.productQuantity} INTEGER, '
           '${DBConstants.cartDetail} VARCHAR)',
         );
       },
@@ -36,30 +38,47 @@ class DBHelper {
   }
 
   Future<int> insertCartDetails(Product cartDetail) async {
-    // if (tyreDetails.images != null && tyreDetails.images.length > 0) {
-    //   tyreDetails = await _convertImages(tyreDetails);
-    // }
     var data = <String, String>{};
     data[DBConstants.cartDetail] = jsonEncode(cartDetail);
-    return await database.insert(
-      DBConstants.cartDetailTable,
-      data,
-      conflictAlgorithm: ConflictAlgorithm.ignore,
-    );
+    data[DBConstants.productId] = cartDetail.id.toString();
+    data[DBConstants.productQuantity] = "1";
+
+    var cartItem = await database.query(DBConstants.cartDetailTable,
+        where: '${DBConstants.productId} = ?', whereArgs: [cartDetail.id.toString()]);
+    if (cartItem.isEmpty) {
+      return await database.insert(
+        DBConstants.cartDetailTable,
+        data,
+        conflictAlgorithm: ConflictAlgorithm.ignore,
+      );
+    } else {
+      updateItem(cartDetail);
+      return 0;
+    }
   }
 
-  Future<List<Product>> getCartItems() async {
+  Future<List<Cart>> getCartItems() async {
     var data = await database.query(DBConstants.cartDetailTable);
-    final list = <Product>[];
+    final list = <Cart>[];
     for (int i = 0; i < data.length; i++) {
-      String product = data[i].values.toList()[2].toString();
-      debugPrint("product_String, $product");
+      String product = data[i].values.toList()[3].toString();
       final values = json.decode(product);
-      debugPrint("product_String, $values");
-      list.add(Product.fromJson(values));
+      Cart cart = Cart(Product.fromJson(values), data[i].values.toList()[2].toString());
+      list.add(cart);
     }
     debugPrint("List = ${list.length}");
     return list;
+  }
+
+  updateItem(Product cartDetail) async {
+    var data = await database.query(DBConstants.cartDetailTable,
+        columns: [DBConstants.productQuantity],
+        where: '${DBConstants.productId} = ?', whereArgs: [cartDetail.id.toString()]);
+    debugPrint('data = $data');
+    String productQuantity = data[0].values.toList()[0].toString();
+    return await database.rawUpdate(
+        'UPDATE ${DBConstants.cartDetailTable} SET ${DBConstants.productQuantity} = ? WHERE ${DBConstants.productId} = ?',
+        [int.parse(productQuantity) + 1, cartDetail.id]);
   }
 //
 // Future<int> removeTyreDetails(String timeStamp) {

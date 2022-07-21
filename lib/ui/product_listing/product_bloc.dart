@@ -13,17 +13,23 @@ class ProductBloc extends BlocBase {
   Stream<List<Product>> get productStream =>
       _productStreamController.stream;
 
+  final didReachToEndStreamController = StreamController<bool>();
+  List<Product> allProducts = [];
+  final int itemsLimit = 5;
+
   @override
   void dispose() {
     _productStreamController.close();
   }
 
-  void fetchProducts() {
+  void fetchProducts(int currentPage) {
     AppComponentBase.getInstance()
         ?.getApiInterface()
-        .getProductRepositoryImpl().getProductList()
+        .getProductRepositoryImpl().getProductList(currentPage,itemsLimit)
         .then((products) {
-      _productStreamController.sink.add(products.data!);
+      allProducts.addAll(products.data!);
+      _productStreamController.sink.add(allProducts);
+      didReachToEndStreamController.add(products.data!.length < itemsLimit);
     }).catchError((error) {
       if (error is AppException) {
         error.onException();

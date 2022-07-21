@@ -4,12 +4,12 @@ import 'package:practical/services/product_services.dart';
 class ProductRepositoryImpl extends ProductRepository {
   final _productService = ProductServices();
   @override
-  Future<ProductResponse> getProductList() async {
-    return await _productService.getProductList();
+  Future<ProductResponse> getProductList(int currentPage, int pageCount) async {
+    return await _productService.getProductList(currentPage, pageCount);
   }
 
 }
 
 abstract class ProductRepository {
-  Future<ProductResponse> getProductList();
+  Future<ProductResponse> getProductList(int currentPage, int pageCount);
 }
